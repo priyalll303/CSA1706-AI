@@ -1,0 +1,28 @@
+from collections import deque
+
+def is_solved(puzzle):
+    return puzzle == [1, 2, 3, 4, 5, 6, 7, 8, 0]
+
+def get_neighbors(puzzle):
+    neighbors = []
+    pos = puzzle.index(0)
+    if pos > 2: neighbors.append(puzzle[:pos-3] + [0] + puzzle[pos-2:pos] + [puzzle[pos-3]] + puzzle[pos+1:])
+    if pos < 6: neighbors.append(puzzle[:pos] + [puzzle[pos+3]] + puzzle[pos+1:pos+3] + [0] + puzzle[pos+4:])
+    if pos % 3 > 0: neighbors.append(puzzle[:pos-1] + [0] + [puzzle[pos-1]] + puzzle[pos+1:])
+    if pos % 3 < 2: neighbors.append(puzzle[:pos] + [puzzle[pos+1]] + [0] + puzzle[pos+2:])
+    return neighbors
+
+def bfs(puzzle):
+    queue = deque([(puzzle, 0)])
+    visited = set(tuple(puzzle))
+    while queue:
+        state, steps = queue.popleft()
+        if is_solved(state): return steps
+        for neighbor in get_neighbors(state):
+            if tuple(neighbor) not in visited:
+                queue.append((neighbor, steps + 1))
+                visited.add(tuple(neighbor))
+
+puzzle = [ 1, 4, 3, 2, 7, 5, 8, 0, 6]
+steps = bfs(puzzle)
+print(f"Solved in {steps} steps")
