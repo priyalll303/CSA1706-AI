@@ -1,0 +1,25 @@
+def solveNQueens(n):
+    result = []
+    def DFS(queens, xy_dif, xy_sum):
+        p = len(queens)
+        if p == n:
+            result.append(queens)
+            return True
+        for q in range(n):
+            if q not in queens and p-q not in xy_dif and p+q not in xy_sum: 
+                if DFS(queens+[q], xy_dif+[p-q], xy_sum+[p+q]): 
+                    return True
+        return False
+    DFS([],[],[])
+    if result:
+        sol = result[0]
+        return [["."*i + "Q" + "."*(n-i-1) for i in sol]]
+    else:
+        return []
+
+n = 8
+result = solveNQueens(n)
+for sol in result:
+    for row in sol:
+        print(row)
+    print()
